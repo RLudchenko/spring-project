@@ -12,7 +12,6 @@ import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.stereotype.Repository;
 import spring.intro.model.User;
 
-@Repository
 @Configuration
 @PropertySource("classpath:db.properties")
 @ComponentScan(basePackages = {
