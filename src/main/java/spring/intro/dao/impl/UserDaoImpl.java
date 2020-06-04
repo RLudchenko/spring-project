@@ -1,7 +1,9 @@
 package spring.intro.dao.impl;
 
 import java.util.List;
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -48,6 +50,19 @@ public class UserDaoImpl implements UserDao {
             return session.createQuery(criteriaQuery).getResultList();
         } catch (HibernateException e) {
             throw new RuntimeException("Can't get all users", e);
+        }
+    }
+
+    @Override
+    public User get(Long id) {
+        try (Session session = sessionFactory.openSession()) {
+            CriteriaBuilder builder = session.getCriteriaBuilder();
+            CriteriaQuery<User> query = builder.createQuery(User.class);
+            Root<User> root = query.from(User.class);
+            return session.createQuery(query.where(builder.equal(root.get("id"), id)))
+                    .getSingleResult();
+        } catch (HibernateException e) {
+            throw new DataProcessingException("Can't get user! ", e);
         }
     }
 }
