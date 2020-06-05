@@ -1,4 +1,4 @@
-package spring.intro;
+package spring.intro.dto;
 
 public class UserResponseDto {
     private String name;

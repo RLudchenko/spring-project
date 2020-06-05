@@ -1,12 +1,12 @@
 package spring.intro.controllers;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import spring.intro.UserResponseDto;
+import spring.intro.dto.UserResponseDto;
 import spring.intro.model.User;
 import spring.intro.service.UserService;
 
@@ -32,20 +32,18 @@ public class UserController {
     @GetMapping("/{userId}")
     public UserResponseDto get(@PathVariable Long userId) {
         User user = userService.get(userId);
-        return getUserResponse(user);
+        return getUserResponseDto(user);
     }
 
     @GetMapping("/")
     public List<UserResponseDto> getAll() {
-        List<User> users = userService.listUsers();
-        List<UserResponseDto> dtos = new ArrayList<>();
-        for (User user : users) {
-            dtos.add(getUserResponse(user));
-        }
-        return dtos;
+        return userService.listUsers()
+                .stream()
+                .map((this::getUserResponseDto))
+                .collect(Collectors.toList());
     }
 
-    private UserResponseDto getUserResponse(User user) {
+    private UserResponseDto getUserResponseDto(User user) {
         UserResponseDto dto = new UserResponseDto();
         dto.setName(user.getName());
         dto.setAge(user.getAge());
